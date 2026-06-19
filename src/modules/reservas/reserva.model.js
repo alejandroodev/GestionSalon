@@ -25,10 +25,12 @@ const Reserva = {
   ).run(r.usuario_id, r.salon_id, r.fecha, r.hora_inicio, r.hora_fin),
 
   actualizar: (id, r) => db.prepare(
-    'UPDATE reservas SET usuario_id=?, salon_id=?, fecha=?, hora_inicio=?, hora_fin=? WHERE id=?'
-  ).run(r.usuario_id, r.salon_id, r.fecha, r.hora_inicio, r.hora_fin, id),
+    'UPDATE reservas SET usuario_id=?, salon_id=?, fecha=?, hora_inicio=?, hora_fin=?, estado=? WHERE id=?'
+  ).run(r.usuario_id, r.salon_id, r.fecha, r.hora_inicio, r.hora_fin, r.estado, id),
 
   cancelar: (id) => db.prepare("UPDATE reservas SET estado='cancelada' WHERE id=?").run(id),
+
+  activar: (id) => db.prepare("UPDATE reservas SET estado='activa' WHERE id=? AND estado='pendiente'").run(id),
 };
 
 module.exports = Reserva;

@@ -1,7 +1,7 @@
 const Pago = require('./pago.model');
 const Reserva = require('../reservas/reserva.model');
+const Salon = require('../salones/salon.model');
 
-// Monto = horas reservadas × precio por hora del salón
 function calcularMonto(reserva) {
   const [hi, mi] = reserva.hora_inicio.split(':').map(Number);
   const [hf, mf] = reserva.hora_fin.split(':').map(Number);
@@ -29,8 +29,18 @@ exports.crear = (req, res) => {
   if (req.session.user.rol !== 'admin' && reserva.usuario_id !== req.session.user.id) {
     return res.status(403).render('error', { msg: 'No autorizado' });
   }
-  // El monto se calcula en el servidor; no se confía en lo que venga del form.
+  // Solo se paga una reserva pendiente
+  if (reserva.estado !== 'pendiente') {
+    req.session.flash = 'La reserva ya no está pendiente de pago';
+    return res.redirect('/reservas');
+  }
+  // Revalida disponibilidad al pagar: otra reserva pudo activarse en ese horario mientras estaba pendiente
+  if (Salon.hayChoque(reserva.salon_id, reserva.fecha, reserva.hora_inicio, reserva.hora_fin, reserva.id)) {
+    req.session.flash = 'El salón ya no está disponible en ese horario, no se pudo pagar';
+    return res.redirect('/reservas');
+  }
   Pago.crear({ reserva_id: reserva.id, monto: calcularMonto(reserva), metodo: req.body.metodo });
-  req.session.flash = 'Pago registrado';
+  Reserva.activar(reserva.id);
+  req.session.flash = 'Pago registrado, reserva activada';
   res.redirect('/pagos');
 };

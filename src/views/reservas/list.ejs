@@ -16,9 +16,13 @@
         <% if (user.rol === 'admin') { %><td><%= r.cliente_nombre %></td><% } %>
         <td><%= r.estado %></td>
         <td>
-          <% if (r.estado === 'activa') { %>
+          <% if (user.rol === 'admin' || r.estado === 'pendiente' || r.estado === 'activa') { %>
             <a href="/reservas/<%= r.id %>/editar">Editar</a>
+          <% } %>
+          <% if (r.estado === 'pendiente' || r.estado === 'activa') { %>
             | <form method="post" action="/reservas/<%= r.id %>/cancelar" style="display:inline" onsubmit="return confirm('¿Cancelar reserva?')"><button class="link">Cancelar</button></form>
+          <% } %>
+          <% if (r.estado === 'pendiente') { %>
             | <a href="/pagos/reserva/<%= r.id %>/nuevo">Pagar</a>
           <% } %>
         </td>

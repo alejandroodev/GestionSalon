@@ -14,7 +14,6 @@ const Salon = {
         s.hora_apertura || '08:00', s.hora_cierre || '22:00', s.activo ? 1 : 0, id),
   eliminar: (id) => db.prepare('DELETE FROM salones WHERE id = ?').run(id),
 
-  // Disponibilidad: choca si hay reserva activa con solape de horas en la misma fecha
   hayChoque: (salonId, fecha, hi, hf, excluirReservaId = null) => {
     const sql = `SELECT 1 FROM reservas
       WHERE salon_id = ? AND fecha = ? AND estado = 'activa'

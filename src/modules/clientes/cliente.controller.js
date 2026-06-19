@@ -3,6 +3,7 @@ const Cliente = require('./cliente.model');
 exports.listar = (req, res) => res.render('clientes/list', { clientes: Cliente.all() });
 
 exports.perfil = (req, res) => {
+  if (req.session.user.rol === 'admin') return res.redirect('/clientes');
   const cliente = Cliente.byId(req.session.user.id);
   res.render('clientes/perfil', { cliente, historial: Cliente.historial(cliente.id) });
 };

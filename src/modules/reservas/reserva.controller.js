@@ -38,7 +38,6 @@ exports.crear = (req, res) => {
     clientes: esAdmin ? Cliente.all() : null, action: '/reservas', error,
   });
 
-  // El admin debe asignar la reserva a un cliente; el cliente la crea para sí mismo.
   let usuario_id = req.session.user.id;
   if (esAdmin) {
     usuario_id = req.body.usuario_id;
@@ -62,6 +61,7 @@ exports.editarForm = (req, res) => {
   const esAdmin = req.session.user.rol === 'admin';
   res.render('reservas/form', {
     reserva, salones: Salon.activos(), clientes: esAdmin ? Cliente.all() : null,
+    bloqueado: reserva.estado === 'activa', // ya pagada: no se cambian fecha/hora/salón
     action: `/reservas/${reserva.id}`, error: null,
   });
 };
@@ -73,23 +73,30 @@ exports.actualizar = (req, res) => {
   if (!esAdmin && reserva.usuario_id !== req.session.user.id) {
     return res.status(403).render('error', { msg: 'No autorizado' });
   }
-  const { salon_id, fecha, hora_inicio, hora_fin } = req.body;
+  const bloqueado = reserva.estado === 'activa'; // ya pagada: fecha/hora/salón no se tocan
   const render = (error) => res.status(400).render('reservas/form', {
-    reserva: { ...req.body, id: reserva.id }, salones: Salon.activos(),
-    clientes: esAdmin ? Cliente.all() : null, action: `/reservas/${reserva.id}`, error,
+    reserva: { ...req.body, id: reserva.id, estado: reserva.estado }, salones: Salon.activos(),
+    clientes: esAdmin ? Cliente.all() : null, bloqueado, action: `/reservas/${reserva.id}`, error,
   });
 
-  // El admin puede reasignar a otro cliente; el cliente conserva su propia reserva.
   let usuario_id = reserva.usuario_id;
   if (esAdmin) {
     usuario_id = req.body.usuario_id;
     if (!usuario_id || !Cliente.byId(usuario_id)) return render('Debes asignar la reserva a un cliente');
   }
 
-  const err = validarHorario(fecha, hora_inicio, hora_fin, Salon.byId(salon_id));
-  if (err) return render(err);
-  if (Salon.hayChoque(salon_id, fecha, hora_inicio, hora_fin, reserva.id)) return render('El salón no está disponible en ese horario');
-  Reserva.actualizar(reserva.id, { usuario_id, salon_id, fecha, hora_inicio, hora_fin });
+  const estadosValidos = ['pendiente', 'activa', 'cancelada', 'finalizada'];
+  let estado = reserva.estado;
+  if (esAdmin && estadosValidos.includes(req.body.estado)) estado = req.body.estado;
+
+  // Si está pagada, se conservan los valores guardados; si no, se toman del form y se validan.
+  let { salon_id, fecha, hora_inicio, hora_fin } = bloqueado ? reserva : req.body;
+  if (!bloqueado) {
+    const err = validarHorario(fecha, hora_inicio, hora_fin, Salon.byId(salon_id));
+    if (err) return render(err);
+    if (Salon.hayChoque(salon_id, fecha, hora_inicio, hora_fin, reserva.id)) return render('El salón no está disponible en ese horario');
+  }
+  Reserva.actualizar(reserva.id, { usuario_id, salon_id, fecha, hora_inicio, hora_fin, estado });
   req.session.flash = 'Reserva actualizada';
   res.redirect('/reservas');
 };

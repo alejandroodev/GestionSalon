@@ -14,8 +14,11 @@
       <a href="/salones">Salones</a>
       <a href="/reservas">Reservas</a>
       <a href="/pagos">Pagos</a>
-      <% if (user.rol === 'admin') { %><a href="/clientes">Clientes</a><% } %>
-      <a href="/clientes/me">Mi perfil</a>
+      <% if (user.rol === 'admin') { %>
+        <a href="/clientes">Clientes</a>
+      <% } else { %>
+        <a href="/clientes/me">Mi perfil</a>
+      <% } %>
       <form method="post" action="/logout" style="display:inline">
         <button class="link">Salir (<%= user.nombre %>)</button>
       </form>

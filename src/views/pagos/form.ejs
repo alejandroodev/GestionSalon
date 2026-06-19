@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+<h1>Registrar pago — Reserva #<%= reserva.id %></h1>
+<p><strong><%= reserva.salon_nombre %></strong> — <%= reserva.fecha %> <%= reserva.hora_inicio %>–<%= reserva.hora_fin %></p>
+<p>Precio del salón: $<%= reserva.precio_hora %>/hora</p>
+<p><strong>Monto a pagar: $<%= monto %></strong></p>
+<form method="post" action="/pagos/reserva/<%= reserva.id %>">
+  <label>Método
+    <select name="metodo" required>
+      <option>Efectivo</option>
+      <option>Tarjeta</option>
+      <option>Transferencia</option>
+    </select>
+  </label>
+  <button type="submit">Pagar</button>
+  <a href="/reservas">Cancelar</a>
+</form>
+<%- include('../partials/footer') %>

@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+<h1>Reservas</h1>
+<p><a class="btn" href="/reservas/nueva">+ Nueva reserva</a></p>
+<table>
+  <thead><tr>
+    <th>Fecha</th><th>Horario</th><th>Salón</th>
+    <% if (user.rol === 'admin') { %><th>Cliente</th><% } %>
+    <th>Estado</th><th></th>
+  </tr></thead>
+  <tbody>
+    <% reservas.forEach(r => { %>
+      <tr>
+        <td><%= r.fecha %></td>
+        <td><%= r.hora_inicio %>–<%= r.hora_fin %></td>
+        <td><%= r.salon_nombre %></td>
+        <% if (user.rol === 'admin') { %><td><%= r.cliente_nombre %></td><% } %>
+        <td><%= r.estado %></td>
+        <td>
+          <% if (r.estado === 'activa') { %>
+            <a href="/reservas/<%= r.id %>/editar">Editar</a>
+            | <form method="post" action="/reservas/<%= r.id %>/cancelar" style="display:inline" onsubmit="return confirm('¿Cancelar reserva?')"><button class="link">Cancelar</button></form>
+            | <a href="/pagos/reserva/<%= r.id %>/nuevo">Pagar</a>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+    <% if (!reservas.length) { %><tr><td colspan="6">Sin reservas</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+<h1><%= salon.id ? 'Editar' : 'Nuevo' %> salón</h1>
+<form method="post" action="<%= action %>">
+  <label>Nombre <input name="nombre" value="<%= salon.nombre || '' %>" required></label>
+  <label>Ubicación <input name="ubicacion" value="<%= salon.ubicacion || '' %>" required></label>
+  <label>Capacidad <input type="number" name="capacidad" min="1" value="<%= salon.capacidad || '' %>" required></label>
+  <label>Precio por hora <input type="number" step="0.01" name="precio_hora" value="<%= salon.precio_hora || 0 %>"></label>
+  <label>Hora de apertura <input type="time" name="hora_apertura" value="<%= salon.hora_apertura || '08:00' %>" required></label>
+  <label>Hora de cierre <input type="time" name="hora_cierre" value="<%= salon.hora_cierre || '22:00' %>" required></label>
+  <label>Características <textarea name="caracteristicas"><%= salon.caracteristicas || '' %></textarea></label>
+  <% if (salon.id) { %>
+    <label><input type="checkbox" name="activo" <%= salon.activo ? 'checked' : '' %>> Activo</label>
+  <% } %>
+  <button type="submit">Guardar</button>
+  <a href="/salones">Cancelar</a>
+</form>
+<%- include('../partials/footer') %>

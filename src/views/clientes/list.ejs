@@ -1,0 +1,16 @@
+<%- include('../partials/header') %>
+<h1>Clientes</h1>
+<table>
+  <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Alta</th><th></th></tr></thead>
+  <tbody>
+    <% clientes.forEach(c => { %>
+      <tr>
+        <td><%= c.nombre %></td><td><%= c.email %></td><td><%= c.telefono || '-' %></td>
+        <td><%= c.creado_en %></td>
+        <td><a href="/clientes/<%= c.id %>">Historial</a></td>
+      </tr>
+    <% }) %>
+    <% if (!clientes.length) { %><tr><td colspan="5">Sin clientes</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

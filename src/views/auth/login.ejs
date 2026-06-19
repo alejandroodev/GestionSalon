@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+<h1>Ingresar</h1>
+<% if (error) { %><p class="error"><%= error %></p><% } %>
+<form method="post" action="/login">
+  <label>Email <input type="email" name="email" required></label>
+  <label>Contraseña <input type="password" name="password" required></label>
+  <button type="submit">Entrar</button>
+</form>
+<p>¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
+<p class="hint">Admin demo: admin@local / admin123</p>
+<%- include('../partials/footer') %>

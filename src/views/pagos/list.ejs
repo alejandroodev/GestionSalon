@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+<h1>Pagos</h1>
+<table>
+  <thead><tr>
+    <th>Fecha pago</th><th>Reserva</th><th>Salón</th>
+    <% if (user.rol === 'admin') { %><th>Cliente</th><% } %>
+    <th>Monto</th><th>Método</th><th>Estado</th>
+  </tr></thead>
+  <tbody>
+    <% pagos.forEach(p => { %>
+      <tr>
+        <td><%= p.creado_en %></td>
+        <td>#<%= p.reserva_id %> (<%= p.fecha %>)</td>
+        <td><%= p.salon_nombre %></td>
+        <% if (user.rol === 'admin') { %><td><%= p.cliente_nombre %></td><% } %>
+        <td>$<%= p.monto %></td>
+        <td><%= p.metodo %></td>
+        <td><%= p.estado %></td>
+      </tr>
+    <% }) %>
+    <% if (!pagos.length) { %><tr><td colspan="7">Sin pagos</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

@@ -1,0 +1,17 @@
+<%- include('../partials/header') %>
+<h1>Disponibilidad — <%= salon.nombre %></h1>
+<p>Horario del salón: <strong><%= salon.hora_apertura %> a <%= salon.hora_cierre %></strong></p>
+<form method="get">
+  <label>Fecha <input type="date" name="fecha" value="<%= fecha %>" required></label>
+  <button type="submit">Consultar</button>
+</form>
+<h2>Horarios ocupados el <%= fecha %></h2>
+<% if (!ocupados.length) { %>
+  <p>Libre todo el día.</p>
+<% } else { %>
+  <ul>
+    <% ocupados.forEach(o => { %><li><%= o.hora_inicio %> – <%= o.hora_fin %></li><% }) %>
+  </ul>
+<% } %>
+<p><a href="/reservas/nueva?salon_id=<%= salon.id %>">Reservar este salón</a></p>
+<%- include('../partials/footer') %>

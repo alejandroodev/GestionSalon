@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+<h1>Perfil de <%= cliente.nombre %></h1>
+<% if (!locals.readonly) { %>
+  <form method="post" action="/clientes/me">
+    <label>Nombre <input name="nombre" value="<%= cliente.nombre %>" required></label>
+    <label>Email <input value="<%= cliente.email %>" disabled></label>
+    <label>Teléfono <input name="telefono" value="<%= cliente.telefono || '' %>"></label>
+    <button type="submit">Actualizar</button>
+  </form>
+<% } else { %>
+  <p>Email: <%= cliente.email %></p>
+  <p>Teléfono: <%= cliente.telefono || '-' %></p>
+<% } %>
+
+<h2>Historial de reservas</h2>
+<table>
+  <thead><tr><th>Fecha</th><th>Salón</th><th>Horario</th><th>Estado</th></tr></thead>
+  <tbody>
+    <% historial.forEach(r => { %>
+      <tr><td><%= r.fecha %></td><td><%= r.salon_nombre %></td>
+          <td><%= r.hora_inicio %>–<%= r.hora_fin %></td><td><%= r.estado %></td></tr>
+    <% }) %>
+    <% if (!historial.length) { %><tr><td colspan="4">Sin reservas</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

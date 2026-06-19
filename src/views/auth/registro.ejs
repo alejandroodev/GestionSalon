@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+<h1>Registro de cliente</h1>
+<% if (error) { %><p class="error"><%= error %></p><% } %>
+<form method="post" action="/registro">
+  <label>Nombre <input name="nombre" required></label>
+  <label>Email <input type="email" name="email" required></label>
+  <label>Teléfono <input name="telefono"></label>
+  <label>Contraseña <input type="password" name="password" required minlength="6"></label>
+  <button type="submit">Crear cuenta</button>
+</form>
+<%- include('../partials/footer') %>

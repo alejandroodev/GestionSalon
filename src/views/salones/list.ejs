@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+<h1>Salones</h1>
+<% if (user.rol === 'admin') { %>
+  <p><a class="btn" href="/salones/nuevo">+ Nuevo salón</a></p>
+<% } %>
+<table>
+  <thead><tr><th>Nombre</th><th>Ubicación</th><th>Capacidad</th><th>Precio/h</th><th>Horario</th><th>Estado</th><th></th></tr></thead>
+  <tbody>
+  <% salones.forEach(s => { %>
+    <tr>
+      <td><%= s.nombre %></td>
+      <td><%= s.ubicacion %></td>
+      <td><%= s.capacidad %></td>
+      <td>$<%= s.precio_hora %></td>
+      <td><%= s.hora_apertura %>–<%= s.hora_cierre %></td>
+      <td><%= s.activo ? 'Activo' : 'Inactivo' %></td>
+      <td>
+        <a href="/salones/<%= s.id %>/disponibilidad">Disponibilidad</a>
+        <% if (s.activo) { %> | <a href="/reservas/nueva?salon_id=<%= s.id %>">Reservar</a><% } %>
+        <% if (user.rol === 'admin') { %>
+          | <a href="/salones/<%= s.id %>/editar">Editar</a>
+          | <form method="post" action="/salones/<%= s.id %>/eliminar" style="display:inline" onsubmit="return confirm('¿Eliminar?')"><button class="link">Eliminar</button></form>
+        <% } %>
+      </td>
+    </tr>
+  <% }) %>
+  <% if (!salones.length) { %><tr><td colspan="7">Sin salones</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/footer') %>

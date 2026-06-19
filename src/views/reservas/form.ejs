@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+<h1><%= reserva.id ? 'Editar' : 'Nueva' %> reserva</h1>
+<% if (error) { %><p class="error"><%= error %></p><% } %>
+<form method="post" action="<%= action %>">
+  <% if (clientes) { %>
+    <label>Cliente
+      <select name="usuario_id" required>
+        <option value="">— elige —</option>
+        <% clientes.forEach(cl => { %>
+          <option value="<%= cl.id %>" <%= String(reserva.usuario_id) === String(cl.id) ? 'selected' : '' %>>
+            <%= cl.nombre %> (<%= cl.email %>)
+          </option>
+        <% }) %>
+      </select>
+    </label>
+  <% } %>
+  <label>Salón
+    <select name="salon_id" required>
+      <option value="">— elige —</option>
+      <% salones.forEach(s => { %>
+        <option value="<%= s.id %>" <%= String(reserva.salon_id) === String(s.id) ? 'selected' : '' %>>
+          <%= s.nombre %> (cap. <%= s.capacidad %>)
+        </option>
+      <% }) %>
+    </select>
+  </label>
+  <label>Fecha <input type="date" name="fecha" value="<%= reserva.fecha || '' %>" required></label>
+  <label>Hora inicio <input type="time" name="hora_inicio" value="<%= reserva.hora_inicio || '' %>" required></label>
+  <label>Hora fin <input type="time" name="hora_fin" value="<%= reserva.hora_fin || '' %>" required></label>
+  <button type="submit">Guardar</button>
+  <a href="/reservas">Cancelar</a>
+</form>
+<%- include('../partials/footer') %>

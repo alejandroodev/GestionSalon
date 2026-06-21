@@ -29,12 +29,11 @@ exports.crear = (req, res) => {
   if (req.session.user.rol !== 'admin' && reserva.usuario_id !== req.session.user.id) {
     return res.status(403).render('error', { msg: 'No autorizado' });
   }
-  // Solo se paga una reserva pendiente
   if (reserva.estado !== 'pendiente') {
     req.session.flash = 'La reserva ya no está pendiente de pago';
     return res.redirect('/reservas');
   }
-  // Revalida disponibilidad al pagar: otra reserva pudo activarse en ese horario mientras estaba pendiente
+
   if (Salon.hayChoque(reserva.salon_id, reserva.fecha, reserva.hora_inicio, reserva.hora_fin, reserva.id)) {
     req.session.flash = 'El salón ya no está disponible en ese horario, no se pudo pagar';
     return res.redirect('/reservas');

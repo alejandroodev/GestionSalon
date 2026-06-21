@@ -26,7 +26,7 @@
     </select>
   </label>
   <label>Fecha <input type="date" name="fecha" value="<%= reserva.fecha || '' %>" required <%= locals.bloqueado ? 'disabled' : '' %>></label>
-  <label>Hora inicio <input type="time" name="hora_inicio" value="<%= reserva.hora_inicio || '' %>" required <%= locals.bloqueado ? 'disabled' : '' %>></label>
+  <label>Hora inicio <input type="time" name="hora_inicio" min="00:00"max="23:59" value="<%= reserva.hora_inicio || '' %>" required <%= locals.bloqueado ? 'disabled' : '' %>></label>
   <label>Hora fin <input type="time" name="hora_fin" value="<%= reserva.hora_fin || '' %>" required <%= locals.bloqueado ? 'disabled' : '' %>></label>
   <% if (clientes && reserva.id) { %>
     <label>Estado

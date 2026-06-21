@@ -11,7 +11,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'cambia-esto-en-prod',
+  secret: '#adg015l.15',
   resave: false,
   saveUninitialized: false,
   cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 8 },
@@ -38,5 +38,5 @@ app.use((err, req, res, _next) => {
   res.status(500).render('error', { msg: err.message || 'Error interno' });
 });
 
-const port = process.env.PORT || 3002;
+const port = 3002;
 app.listen(port, () => console.log(`http://localhost:${port}`));
